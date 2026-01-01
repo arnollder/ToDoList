@@ -14,13 +14,13 @@ const ToDo = () => {
 
     const deleteAllTasks = () => {
         console.log("Удаляем все задачи!");
+        const isConfirmed = confirm('Are you wanna to delete all?')
+    
+        if (isConfirmed) {
+            setTasks([])
+        }
     };
 
-        // const isConfirmed = confirm('Are you wanna to delete all?')
-
-        // if (isConfirmed) {
-        //     setTasks([])
-        // }
 
     const deleteTask = (taskId) => {
         console.log(`Удаляем задачу с id: ${taskId}`);
