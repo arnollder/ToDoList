@@ -14,22 +14,31 @@ const ToDo = () => {
 
     const deleteAllTasks = () => {
         console.log("Удаляем все задачи!");
-        const isConfirmed = confirm('Are you wanna to delete all?')
+        const isConfirmed = confirm('Are you wanna to delete all?');
     
         if (isConfirmed) {
             setTasks([])
-        }
+        };
     };
 
 
     const deleteTask = (taskId) => {
         setTasks(
             tasks.filter((task) => task.id !== taskId)
-        )
+        );
     };
 
     const toggleTaskComplete = (taskId, isDone) => {
-        console.log(`Задача ${taskId} ${isDone ? 'выполнена' : 'не выполнена'}`)
+        setTasks(
+            tasks.map((task) => {
+                if (task.id === taskId) {
+                    return {...task, isDone}
+                };
+
+                return task;
+            })
+        )
+        // console.log(`Задача ${taskId} ${isDone ? 'выполнена' : 'не выполнена'}`)
     }
 
     const filterTasks = (query) => {
