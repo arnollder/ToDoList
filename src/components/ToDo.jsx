@@ -1,0 +1,73 @@
+import { useState } from "react";
+import AddTaskForm from "./AddTaskForm";
+import SearchTaskForm from "./SearchTaskForm";
+import ToDoInfo from "./ToDoInfo";
+import ToDoList from "./ToDoList";
+
+const ToDo = () => {    
+    const [tasks, setTasks] = useState([
+        { id: "task-1", title: "Купить молоко", isDone: false },
+        { id: "task-2", title: "Погладить кота", isDone: true },
+    ]);
+
+    const [newTaskTitle, setNewTaskTitle] = useState('');
+
+    const deleteAllTasks = () => {
+        console.log("Удаляем все задачи!");
+    };
+
+        // const isConfirmed = confirm('Are you wanna to delete all?')
+
+        // if (isConfirmed) {
+        //     setTasks([])
+        // }
+
+    const deleteTask = (taskId) => {
+        console.log(`Удаляем задачу с id: ${taskId}`);
+    };
+
+    const toggleTaskComplete = (taskId, isDone) => {
+        console.log(`Задача ${taskId} ${isDone ? 'выполнена' : 'не выполнена'}`)
+    }
+
+    const filterTasks = (query) => {
+        console.log(`Поиск: ${query}`)
+    }
+
+    const addTask = () => {
+        if (newTaskTitle.trim().length >0) {
+            const newTask = {
+                id: crypto?.randomUUID() ?? Date.now().toString(),
+                title: newTaskTitle,
+                isDone: false,
+            }
+
+            setTasks([...tasks, newTask])
+            setNewTaskTitle('')
+        }
+    }
+
+    return (
+        <div className="todo">
+            <h1 className="todo__title">To Do List</h1>
+            <AddTaskForm 
+                addTask={addTask} 
+                newTaskTitle={newTaskTitle}
+                setNewTaskTitle={setNewTaskTitle}
+            />
+            <SearchTaskForm onSearchInput={filterTasks} />
+            <ToDoInfo
+                total={tasks.length}
+                done={tasks.filter(({ isDone }) => isDone).length}
+                onDeleteOnButtonClick={deleteAllTasks}
+            />
+            <ToDoList 
+                tasks={tasks} 
+                onDeleteOnButtonClick={deleteTask}
+                onTaskCompleteChange={toggleTaskComplete}
+            />
+        </div>
+    );
+};
+
+export default ToDo;
