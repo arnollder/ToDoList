@@ -19,11 +19,12 @@ const ToDo = () => {
         ]
     });
 
-    const [newTaskTitle, setNewTaskTitle] = useState('');
+    const [newTaskTitle, setNewTaskTitle] = useState('');    
+    const [searchQuery, setSearchQuery] = useState('');
 
     const newTaskInputRef = useRef(null);
-    
-    const [searchQuery, setSearchQuery] = useState('');
+    const firstIncompleteTaskRef = useRef(null);
+    const firstIncompleteTaskId = tasks.find(({ isDone }) => !isDone)?.id
 
     const deleteAllTasks = () => {
         console.log("Удаляем все задачи!");
@@ -102,10 +103,16 @@ const ToDo = () => {
                 done={tasks.filter(({ isDone }) => isDone).length}
                 onDeleteOnButtonClick={deleteAllTasks}
             />
-            <Button onClick={() => console.log('Scroll!')}>Show first incomplete task</Button>
+            <Button 
+                onClick={() => firstIncompleteTaskRef.current?.scrollIntoView({ behavior: 'smooth' })}
+            >
+                Show first incomplete task
+            </Button>
             <ToDoList 
                 tasks={tasks} 
                 filteredTasks={filteredTasks}
+                firstIncompleteTaskRef={firstIncompleteTaskRef}
+                firstIncompleteTaskId={firstIncompleteTaskId}
                 onDeleteOnButtonClick={deleteTask}
                 onTaskCompleteChange={toggleTaskComplete}
             />
