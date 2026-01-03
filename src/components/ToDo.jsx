@@ -1,16 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect, useEffectEvent, useRef } from "react";
 import AddTaskForm from "./AddTaskForm";
 import SearchTaskForm from "./SearchTaskForm";
 import ToDoInfo from "./ToDoInfo";
 import ToDoList from "./ToDoList";
+import Button from "./Button";
 
 const ToDo = () => {    
-    const [tasks, setTasks] = useState([
-        { id: "task-1", title: "Купить молоко", isDone: false },
-        { id: "task-2", title: "Погладить кота", isDone: true },
-    ]);
+    const [tasks, setTasks] = useState(() => {
+        const savedTasks = localStorage.getItem('tasks')
+
+        if (savedTasks) {
+            return JSON.parse(savedTasks)
+        }
+
+        return [
+            { id: "task-1", title: "Купить молоко", isDone: false },
+            { id: "task-2", title: "Погладить кота", isDone: true },
+        ]
+    });
 
     const [newTaskTitle, setNewTaskTitle] = useState('');
+
+    const newTaskInputRef = useRef(null);
+    
+    const [searchQuery, setSearchQuery] = useState('');
 
     const deleteAllTasks = () => {
         console.log("Удаляем все задачи!");
@@ -38,11 +51,6 @@ const ToDo = () => {
                 return task;
             })
         )
-        // console.log(`Задача ${taskId} ${isDone ? 'выполнена' : 'не выполнена'}`)
-    }
-
-    const filterTasks = (query) => {
-        console.log(`Поиск: ${query}`)
     }
 
     const addTask = () => {
@@ -55,8 +63,26 @@ const ToDo = () => {
 
             setTasks([...tasks, newTask])
             setNewTaskTitle('')
+            setSearchQuery('')
+            newTaskInputRef.current.focus()
+
         }
+
     }
+
+    useEffect(() => {
+        localStorage.setItem('tasks', JSON.stringify(tasks))
+    }, [tasks])
+
+    useEffect(() => {
+        newTaskInputRef.current.focus()
+    }, [])
+
+    const clearSearchQuery = searchQuery.trim().toLowerCase()
+
+    const filteredTasks = clearSearchQuery.length > 0
+    ? tasks.filter(({ title }) => title.toLowerCase().includes(clearSearchQuery))
+    : null
 
     return (
         <div className="todo">
@@ -65,15 +91,21 @@ const ToDo = () => {
                 addTask={addTask} 
                 newTaskTitle={newTaskTitle}
                 setNewTaskTitle={setNewTaskTitle}
+                newTaskInputRef={newTaskInputRef}
             />
-            <SearchTaskForm onSearchInput={filterTasks} />
+            <SearchTaskForm 
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+            />
             <ToDoInfo
                 total={tasks.length}
                 done={tasks.filter(({ isDone }) => isDone).length}
                 onDeleteOnButtonClick={deleteAllTasks}
             />
+            <Button onClick={() => console.log('Scroll!')}>Show first incomplete task</Button>
             <ToDoList 
                 tasks={tasks} 
+                filteredTasks={filteredTasks}
                 onDeleteOnButtonClick={deleteTask}
                 onTaskCompleteChange={toggleTaskComplete}
             />
