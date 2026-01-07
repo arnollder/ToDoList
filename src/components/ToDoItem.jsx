@@ -11,7 +11,7 @@ const ToDoItem = (props) => {
     const {
         firstIncompleteTaskRef,
         firstIncompleteTaskId,
-        deleteAllTasks,
+        deleteTask,
         toggleTaskComplete,
     } = useContext(TasksContext);
 
@@ -32,7 +32,7 @@ const ToDoItem = (props) => {
             <label className="todo-item__label" htmlFor={id}>
                 {title}
             </label>
-            <button className="todo-item__delete-button" aria-label="Delete" title="Delete" onClick={() => deleteAllTasks(id)}>
+            <button className="todo-item__delete-button" aria-label="Delete" title="Delete" onClick={() => deleteTask(id)}>
                 <svg
                     width="20"
                     height="20"
