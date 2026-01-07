@@ -7,7 +7,7 @@ const ToDoInfo = () => {
         deleteAllTasks,
     } = useContext(TasksContext);
 
-    const total = tasks.lenght;
+    const total = tasks.length;
     const hasTasks = total > 0;
     const done = useMemo(() => {
         return tasks.filter(({ isDone }) => isDone).length
